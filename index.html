@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Calculator</title>
+  <style>
+    .calculator {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 48%;
+      padding: 10px;
+      margin: 5px 1%;
+      font-size: 16px;
+    }
+
+    .custom-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+
+    .custom-dialog p {
+      margin: 0;
+      margin-bottom: 10px;
+    }
+
+    .custom-dialog .input-container {
+      display: flex;
+    }
+
+    .custom-dialog .input-container input {
+      flex: 1;
+      padding: 5px;
+    }
+
+    .custom-dialog .button-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+  </style>
+  <script>
+    function handleButtonClick(value) {
+      if (typeof value === 'number') {
+        document.getElementById('display').value += value;
+      } else if (value === '=') {
+        const dialog = document.getElementById('custom-dialog');
+        const input = dialog.querySelector('input');
+        const expression = document.getElementById('display').value;
+
+        dialog.style.display = 'block';
+
+        input.focus();
+
+        dialog.querySelector('form').addEventListener('submit', function(event) {
+          event.preventDefault();
+
+          const userAnswer = input.value.trim();
+          dialog.style.display = 'none';
+
+          try {
+            const result = eval(expression);
+            if (result == userAnswer) {
+              showAlert('Correct answer! Well done!', 'success');
+            } else {
+              showAlert(`You sussy baka! The correct answer is ${result}`, 'error');
+            }
+          } catch (error) {
+            showAlert('Invalid expression. Please try again.', 'error');
+          }
+
+          document.getElementById('display').value = '';
+        });
+      } else {
+        document.getElementById('display').value += value;
+      }
+    }
+
+    function showAlert(message, type) {
+      const dialog = document.getElementById('custom-dialog');
+      const dialogContent = dialog.querySelector('.custom-dialog-content');
+      const closeButton = dialog.querySelector('.close-button');
+
+      dialogContent.textContent = message;
+      dialogContent.className = 'custom-dialog-content ' + type;
+
+      dialog.style.display = 'block';
+
+      closeButton.addEventListener('click', function() {
+        dialog.style.display = 'none';
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" disabled>
+
+    <div class="buttons">
+      <button onclick="handleButtonClick(1)">1</button>
+      <button onclick="handleButtonClick(2)">2</button>
+      <button onclick="handleButtonClick(3)">3</button>
+      <button onclick="handleButtonClick('+')">+</button>
+      <button onclick="handleButtonClick(4)">4</button>
+      <button onclick="handleButtonClick(5)">5</button>
+      <button onclick="handleButtonClick(6)">6</button>
+      <button onclick="handleButtonClick('-')">-</button>
+      <button onclick="handleButtonClick(7)">7</button>
+      <button onclick="handleButtonClick(8)">8</button>
+      <button onclick="handleButtonClick(9)">9</button>
+      <button onclick="handleButtonClick('*')">*</button>
+      <button onclick="handleButtonClick('.')">.</button>
+      <button onclick="handleButtonClick(0)">0</button>
+      <button onclick="handleButtonClick('=')">=</button>
+      <button onclick="handleButtonClick('/')">/</button>
+    </div>
+  </div>
+
+  <div id="custom-dialog" class="custom-dialog">
+    <p class="custom-dialog-content"></p>
+    <form>
+      <div class="input-container">
+        <input type="text" required>
+      </div>
+      <div class="button-container">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+    <div class="close-button">
+      <button>Close</button>
+    </div>
+  </div>
+</body>
+</html>
